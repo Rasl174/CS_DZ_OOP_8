@@ -16,8 +16,6 @@ namespace CS_DZ_OOP_8
             Fighter general = new Fighter("Господин", 400, 200, "Шанс нанести двойной урон", 20);
             Fighter elf = new Fighter("Селена", 300, 50, "Шанс вызова ночного волка с уроном 100", 30);
 
-
-
             bigBoy.Showinfo(); monster.Showinfo(); smallBoy.Showinfo(); general.Showinfo(); elf.Showinfo();
 
             Console.Write("Выберите первого бойца: ");
@@ -61,7 +59,12 @@ namespace CS_DZ_OOP_8
     {
         public BigHuman(string name, int health, int armor, string specialHit, int damage) : base(name, health, armor, specialHit, damage)
         {
+            Berserk();
+        }
 
+        private void Berserk()
+        {
+            Damage += 10;
         }
     }
 
