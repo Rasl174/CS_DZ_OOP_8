@@ -17,7 +17,7 @@ namespace CS_DZ_OOP_8
             Fighter monster = new Fighter(2, "Вурдалак", 200, 5, "Каждую атаку пополняет здоровье на 10", 20);
             Fighter smallBoy = new Fighter(3, "Жилистый", 300, 0, "Тройной удар", 30);
             Fighter general = new Fighter(4 ,"Господин", 400, 15, "Двойной удар", 20);
-            Fighter elf = new Fighter(5, "Селена", 300, 10, "Шанс вызова ночного волка с уроном 100", 30);
+            Fighter elf = new Fighter(5, "Селена", 300, 10, "Ночной волк с уроном 20", 30);
 
             bigBoy.Showinfo(); monster.Showinfo(); smallBoy.Showinfo(); general.Showinfo(); elf.Showinfo();
             fighters.Add(bigBoy); fighters.Add(monster); fighters.Add(smallBoy); fighters.Add(general); fighters.Add(elf);
