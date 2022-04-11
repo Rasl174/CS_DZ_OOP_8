@@ -13,11 +13,11 @@ namespace CS_DZ_OOP_8
             List<Fighter> fighters = new List<Fighter>();
             Fighter firstFighter = null;
             Fighter secondFighter = null;
-            BigHuman bigBoy = new BigHuman(1, "Амбал", 500, 0, "Берсерк + 10 к урону каждую атаку", 10, 10);
-            Fighter monster = new Fighter(2, "Вурдалак", 200, 5, "Каждую атаку пополняет здоровье на 10", 20);
-            Fighter smallBoy = new Fighter(3, "Жилистый", 300, 0, "Тройной удар", 30);
-            Fighter general = new Fighter(4 ,"Господин", 400, 15, "Двойной удар", 20);
-            Fighter elf = new Fighter(5, "Селена", 300, 10, "Ночной волк с уроном 20", 30);
+            BigHuman bigBoy = new BigHuman(1, "Амбал", 600, 0, "Берсерк + 20 к урону", 5);
+            Monster monster = new Monster(2, "Вурдалак", 200, 10, "Быстрая атака", 10);
+            SmallHuman smallBoy = new SmallHuman(3, "Жилистый", 300, 0, "Тройной удар", 10);
+            General general = new General(4 ,"Господин", 400, 10, "Двойной удар", 10);
+            Elf elf = new Elf(5, "Селена", 300, 10, "Ночной волк с уроном 20", 10);
 
             bigBoy.Showinfo(); monster.Showinfo(); smallBoy.Showinfo(); general.Showinfo(); elf.Showinfo();
             fighters.Add(bigBoy); fighters.Add(monster); fighters.Add(smallBoy); fighters.Add(general); fighters.Add(elf);
@@ -29,12 +29,12 @@ namespace CS_DZ_OOP_8
                 if(firstIndex == fighter.Index)
                 {
                     firstFighter = fighter;
-                    Console.WriteLine("Выбран боец - ");
+                    Console.Write("Выбран боец - ");
                     firstFighter.Showinfo();
                 }
             }
 
-            Console.WriteLine("Выберите второго бойца! Нельзя выбирать такого же!");
+            Console.Write("Выберите второго бойца. Нельзя выбирать такого же: ");
             bool correctInput = false;
             while(correctInput == false)
             {
@@ -51,19 +51,30 @@ namespace CS_DZ_OOP_8
                         if(secondIndex == fighter.Index)
                         {
                             secondFighter = fighter;
-                            Console.WriteLine("Выбран боец - ");
+                            Console.Write("Выбран боец - ");
                             secondFighter.Showinfo();
                         }
                     }
                 }
             }
 
-            while (firstFighter.Health > 0 && secondFighter.Health > 0)
+            while (firstFighter.Health >= 0 && secondFighter.Health >= 0)
             {
                 firstFighter.TakeDamage(secondFighter.Damage);
                 secondFighter.TakeDamage(firstFighter.Damage);
                 Console.WriteLine("У бойца - " + firstFighter.Name + " осталось " + firstFighter.Health);
                 Console.WriteLine("У бойца - " + secondFighter.Name + " осталось " + secondFighter.Health);
+
+                if(firstFighter.Health < 0)
+                {
+                    Console.WriteLine(firstFighter.Name + " умер");
+                    Console.WriteLine(secondFighter.Name + " победил");
+                }
+                else if(secondFighter.Health < 0)
+                {
+                    Console.WriteLine(secondFighter.Name + " умер");
+                    Console.WriteLine(firstFighter.Name + " победил");
+                }
             }
         }
     }
@@ -105,41 +116,28 @@ namespace CS_DZ_OOP_8
 
     class BigHuman : Fighter
     {
-        public BigHuman(int index, string name, int health, int armor, string specialHit, int damage, int specialAttack) : base(index, name, health, armor, specialHit, damage += specialAttack)
-        {
+        public BigHuman(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage + 20) { }
 
-        }
     }
 
     class Monster : Fighter
     {
-        public Monster(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage)
-        {
+        public Monster(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage * 6) { }
 
-        }
     }
 
     class SmallHuman : Fighter
     {
-        public SmallHuman(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage)
-        { 
-
-        }
+        public SmallHuman(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage * 3) { }
     }
 
     class General : Fighter
     {
-        public General(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage)
-        {
-
-        }
+        public General(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage * 2) { }
     }
 
     class Elf : Fighter
     {
-        public Elf(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage)
-        {
-
-        }
+        public Elf(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage + 30) { }
     }
 }
