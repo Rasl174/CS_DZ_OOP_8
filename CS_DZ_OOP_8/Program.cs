@@ -10,89 +10,34 @@ namespace CS_DZ_OOP_8
     {
         static void Main(string[] args)
         {
-            SmallHuman smallHuman = new SmallHuman("Жилистый", 300, 0, "Шанс уворота 50%", 30);
-            General general = new General("Господин", 400, 200, "Шанс нанести крит = 50%", 20);
-            Elf elf = new Elf("Селена", 300, 50, "Шанс вызова ночного волка с уроном 100", 30);
+            Fighter bigBoy = new Fighter("Амбал", 500, 50, "Берсерк + 10 к урону каждую атаку", 20);
+            Fighter monster = new Fighter("Вурдалак", 200, 100, "Каждую атаку пополняет здоровье на 10", 20);
+            Fighter smallBoy = new Fighter("Жилистый", 300, 0, "Шанс уворота 50%", 30);
+            Fighter general = new Fighter("Господин", 400, 200, "Шанс нанести двойной урон", 20);
+            Fighter elf = new Fighter("Селена", 300, 50, "Шанс вызова ночного волка с уроном 100", 30);
 
-            Console.WriteLine();
 
-            NewFight fight = new NewFight();
-            fight.Fight();
+
+            bigBoy.Showinfo(); monster.Showinfo(); smallBoy.Showinfo(); general.Showinfo(); elf.Showinfo();
+
+            Console.Write("Выберите первого бойца: ");
+
         }
     }
 
-    class NewFight
+    class Fighter
     {
-        List<NewFight> newFights;
+        protected string Name;
 
-        public void Fight()
-        {
-            
-        }
-    }
+        protected int Health;
 
-    class Fighters
-    {
+        protected int Armor;
 
-    }
+        protected string SpecialHit;
 
-    class BigHuman
-    {
-        public string Name { get; private set; }
+        protected int Damage;
 
-        public int Health { get; private set; }
-
-        public int Armor { get; private set; }
-
-        public string SpecialHit { get; private set; }
-
-        public int Damage { get; private set; }
-
-        public BigHuman()
-        {
-            Name = "Качок";
-            Health = 600;
-            Armor = 200;
-            SpecialHit = "Каждый удар пополняет жизни на 20";
-            Damage = 50;
-        }
-    }
-
-    class Monster
-    {
-        public string Name { get; private set; }
-
-        public int Health { get; private set; }
-
-        public int Armor { get; private set; }
-
-        public string SpecialHit { get; private set; }
-
-        public int Damage { get; private set; }
-
-        public Monster()
-        {
-            Name = "Вурдалак";
-            Health = 200;
-            Armor = 100;
-            SpecialHit = "Каждый удар пополняет жизни на 20";
-            Damage = 20;
-        }
-    }
-
-    class SmallHuman
-    {
-        public string Name { get; private set; }
-
-        public int Health { get; private set; }
-
-        public int Armor { get; private set; }
-
-        public string SpecialHit { get; private set; }
-
-        public int Damage { get; private set; }
-
-        public SmallHuman(string name, int health, int armor, string specialHit, int damage)
+        public Fighter(string name, int health, int armor, string specialHit, int damage)
         {
             Name = name;
             Health = health;
@@ -100,49 +45,55 @@ namespace CS_DZ_OOP_8
             SpecialHit = specialHit;
             Damage = damage;
         }
-    }
 
-    class General
-    {
-        public string Name { get; private set; }
-
-        public int Health { get; private set; }
-
-        public int Armor { get; private set; }
-
-        public string SpecialHit { get; private set; }
-
-        public int Damage { get; private set; }
-
-        public General(string name, int health, int armor, string specialHit, int damage)
+        public void TakeDamage(int damage)
         {
-            Name = name;
-            Health = health;
-            Armor = armor;
-            SpecialHit = specialHit;
-            Damage = damage;
+            Health -= damage - Armor;
+        }
+
+        public void Showinfo()
+        {
+            Console.WriteLine(Name + " его жизни - " + Health + " его броня - " + Armor + " " + SpecialHit + " его урон - " + Damage);
         }
     }
 
-    class Elf
+    class BigHuman : Fighter
     {
-        public string Name { get; private set; }
-
-        public int Health { get; private set; }
-
-        public int Armor { get; private set; }
-
-        public string SpecialHit { get; private set; }
-
-        public int Damage { get; private set; }
-
-        public Elf(string name, int health, int armor, string specialHit, int damage)
+        public BigHuman(string name, int health, int armor, string specialHit, int damage) : base(name, health, armor, specialHit, damage)
         {
-            Name = name;
-            Health = health;
-            Armor = armor;
-            SpecialHit = specialHit;
-            Damage = damage;
+
+        }
+    }
+
+    class Monster : Fighter
+    {
+        public Monster(string name, int health, int armor, string specialHit, int damage) : base(name, health, armor, specialHit, damage)
+        {
+
+        }
+    }
+
+    class SmallHuman : Fighter
+    {
+        public SmallHuman(string name, int health, int armor, string specialHit, int damage) : base(name, health, armor, specialHit, damage)
+        {
+
+        }
+    }
+
+    class General : Fighter
+    {
+        public General(string name, int health, int armor, string specialHit, int damage) : base(name, health, armor, specialHit, damage)
+        {
+
+        }
+    }
+
+    class Elf : Fighter
+    {
+        public Elf(string name, int health, int armor, string specialHit, int damage) : base(name, health, armor, specialHit, damage)
+        {
+
         }
     }
 }
