@@ -10,97 +10,139 @@ namespace CS_DZ_OOP_8
     {
         static void Main(string[] args)
         {
-            Fighter[] fighters = {new Fighter("Иван Амбал", 500, 20, 80), new Fighter("Человек Торнадо", 400, 0, 60), new Fighter("Леха Каратист", 350, 0, 100),
-                                  new Fighter("Полковник Грач", 450, 30, 70), new Fighter("Железный человек", 400, 40, 80)};
+            SmallHuman smallHuman = new SmallHuman("Жилистый", 300, 0, "Шанс уворота 50%", 30);
+            General general = new General("Господин", 400, 200, "Шанс нанести крит = 50%", 20);
+            Elf elf = new Elf("Селена", 300, 50, "Шанс вызова ночного волка с уроном 100", 30);
 
-            int firstFighterNumber;
-            int secondFighterNumber;
+            Console.WriteLine();
 
-            for (int i = 0; i < fighters.Length; i++)
-            {
-                Console.Write((i + 1) + " ");
-                fighters[i].ShowStats();
-            }
-
-            Console.Write("Выберите первого бойца: ");
-            firstFighterNumber = Convert.ToInt32(Console.ReadLine());
-            Fighter firstFighter = fighters[firstFighterNumber - 1];
-            Console.Write("Выберите второго бойца: ");
-            secondFighterNumber = Convert.ToInt32(Console.ReadLine());
-            Fighter secondFighter = fighters[secondFighterNumber - 1];
-
-            while(firstFighter.Health > 0 && secondFighter.Health > 0)
-            {
-                firstFighter.TakeDamage(secondFighter.Damage);
-                secondFighter.TakeDamage(firstFighter.Damage);
-                firstFighter.ShowStats();
-                secondFighter.ShowStats();
-
-                if(firstFighter.Health <= 0 && secondFighter.Health <= 0)
-                {
-                    Console.WriteLine("Оба умерли!");
-                }
-                else if(firstFighter.Health <= 0)
-                {
-                    Console.WriteLine(firstFighter.Name + " погиб.");
-                    Console.WriteLine(secondFighter.Name + " выиграл!");
-                }
-                else if(secondFighter.Health <= 0)
-                {
-                    Console.WriteLine(secondFighter.Name + " погиб.");
-                    Console.WriteLine(firstFighter.Name + " выиграл!");
-                }
-            }
+            NewFight fight = new NewFight();
+            fight.Fight();
         }
     }
 
-    class Fighter
+    class NewFight
     {
-        private string _name;
-        private int _health;
-        private int _armor;
-        private int _damage;
+        List<NewFight> newFights;
 
-        public string Name
+        public void Fight()
         {
-            get
-            {
-                return _name;
-            }
+            
         }
+    }
 
-        public int Health
+    class Fighters
+    {
+
+    }
+
+    class BigHuman
+    {
+        public string Name { get; private set; }
+
+        public int Health { get; private set; }
+
+        public int Armor { get; private set; }
+
+        public string SpecialHit { get; private set; }
+
+        public int Damage { get; private set; }
+
+        public BigHuman()
         {
-            get
-            {
-                return _health;
-            }
+            Name = "Качок";
+            Health = 600;
+            Armor = 200;
+            SpecialHit = "Каждый удар пополняет жизни на 20";
+            Damage = 50;
         }
+    }
 
-        public int Damage
+    class Monster
+    {
+        public string Name { get; private set; }
+
+        public int Health { get; private set; }
+
+        public int Armor { get; private set; }
+
+        public string SpecialHit { get; private set; }
+
+        public int Damage { get; private set; }
+
+        public Monster()
         {
-            get
-            {
-                return _damage;
-            }
+            Name = "Вурдалак";
+            Health = 200;
+            Armor = 100;
+            SpecialHit = "Каждый удар пополняет жизни на 20";
+            Damage = 20;
         }
+    }
 
-        public Fighter(string name, int health, int armor, int damage)
+    class SmallHuman
+    {
+        public string Name { get; private set; }
+
+        public int Health { get; private set; }
+
+        public int Armor { get; private set; }
+
+        public string SpecialHit { get; private set; }
+
+        public int Damage { get; private set; }
+
+        public SmallHuman(string name, int health, int armor, string specialHit, int damage)
         {
-            _name = name;
-            _health = health;
-            _armor = armor;
-            _damage = damage;
+            Name = name;
+            Health = health;
+            Armor = armor;
+            SpecialHit = specialHit;
+            Damage = damage;
         }
+    }
 
-        public void ShowStats()
+    class General
+    {
+        public string Name { get; private set; }
+
+        public int Health { get; private set; }
+
+        public int Armor { get; private set; }
+
+        public string SpecialHit { get; private set; }
+
+        public int Damage { get; private set; }
+
+        public General(string name, int health, int armor, string specialHit, int damage)
         {
-            Console.WriteLine(_name + " Жизни - " + _health + " Броня - " + _armor + " Урон - " + _damage);
+            Name = name;
+            Health = health;
+            Armor = armor;
+            SpecialHit = specialHit;
+            Damage = damage;
         }
+    }
 
-        public void TakeDamage(int damage)
+    class Elf
+    {
+        public string Name { get; private set; }
+
+        public int Health { get; private set; }
+
+        public int Armor { get; private set; }
+
+        public string SpecialHit { get; private set; }
+
+        public int Damage { get; private set; }
+
+        public Elf(string name, int health, int armor, string specialHit, int damage)
         {
-            _health = _health - (damage - _armor);
+            Name = name;
+            Health = health;
+            Armor = armor;
+            SpecialHit = specialHit;
+            Damage = damage;
         }
     }
 }
