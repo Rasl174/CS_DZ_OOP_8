@@ -10,51 +10,84 @@ namespace CS_DZ_OOP_8
     {
         static void Main(string[] args)
         {
+            Arena arena = new Arena();
             List<Fighter> fighters = new List<Fighter>();
-            Fighter firstFighter = null;
-            Fighter secondFighter = null;
-            BigHuman bigBoy = new BigHuman(1, "Амбал", 600, 0, "Берсерк + 20 к урону", 5);
-            Monster monster = new Monster(2, "Вурдалак", 200, 10, "Быстрая атака", 10);
-            SmallHuman smallBoy = new SmallHuman(3, "Жилистый", 300, 0, "Тройной удар", 10);
-            General general = new General(4 ,"Господин", 400, 10, "Двойной удар", 10);
-            Elf elf = new Elf(5, "Селена", 300, 10, "Ночной волк с уроном 20", 10);
+            BigHuman bigBoy = new BigHuman(1, "Амбал", 600, 0, "Берсерк + 20 к урону", 5, 20);
+            Monster monster = new Monster(2, "Вурдалак", 200, 10, "Быстрая атака", 10, 6);
+            SmallHuman smallBoy = new SmallHuman(3, "Жилистый", 300, 0, "Тройной удар", 10, 3);
+            General general = new General(4 ,"Господин", 400, 10, "Двойной удар", 10, 2);
+            Elf elf = new Elf(5, "Селена", 300, 10, "Ночной волк с уроном 30", 10, 30);
 
-            bigBoy.Showinfo(); monster.Showinfo(); smallBoy.Showinfo(); general.Showinfo(); elf.Showinfo();
-            fighters.Add(bigBoy); fighters.Add(monster); fighters.Add(smallBoy); fighters.Add(general); fighters.Add(elf);
+            fighters.Add(bigBoy); 
+            fighters.Add(monster); 
+            fighters.Add(smallBoy); 
+            fighters.Add(general); 
+            fighters.Add(elf);
 
-            Console.Write("Выберите первого бойца: ");
-            int firstIndex = Convert.ToInt32(Console.ReadLine());
             foreach (var fighter in fighters)
             {
-                if(firstIndex == fighter.Index)
+                fighter.Showinfo();
+            }
+
+            arena.Fight(fighters);
+        }
+    }
+
+    class Arena
+    {
+        public void Fight(List <Fighter> fighters)
+        {
+            Fighter firstFighter = null;
+            Fighter secondFighter = null;
+            bool correctFirstInput = false;
+            bool correctSecondInput = false;
+            int index = 0;
+
+            Console.Write("Выберите первого бойца: ");
+
+            while (correctFirstInput == false)
+            {
+                if(int.TryParse(Console.ReadLine(), out int firstIndex) && firstIndex > 0 && firstIndex <= fighters.Count)
                 {
-                    firstFighter = fighter;
-                    Console.Write("Выбран боец - ");
-                    firstFighter.Showinfo();
+                    correctFirstInput = true;
+                    index = firstIndex;
+
+                    foreach (var fighter in fighters)
+                    {
+                        if (firstIndex == fighter.Index)
+                        {
+                            firstFighter = fighter;
+                            Console.Write("Выбран боец - ");
+                            firstFighter.Showinfo();
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Не верный ввод повторите попытку: ");
                 }
             }
 
             Console.Write("Выберите второго бойца. Нельзя выбирать такого же: ");
-            bool correctInput = false;
-            while(correctInput == false)
+
+            while (correctSecondInput == false)
             {
-                int secondIndex = Convert.ToInt32(Console.ReadLine());
-                if(firstIndex == secondIndex)
+                if (int.TryParse(Console.ReadLine(), out int secondIndex) && secondIndex > 0 && secondIndex <= fighters.Count && index != secondIndex)
                 {
-                    Console.WriteLine("Ошибка повторите попытку!");
-                }
-                else
-                {
-                    correctInput = true;
+                    correctSecondInput = true;
                     foreach (var fighter in fighters)
                     {
-                        if(secondIndex == fighter.Index)
+                        if (secondIndex == fighter.Index)
                         {
                             secondFighter = fighter;
                             Console.Write("Выбран боец - ");
                             secondFighter.Showinfo();
                         }
                     }
+                }
+                else
+                {
+                    Console.WriteLine("Ошибка повторите попытку!");
                 }
             }
 
@@ -65,12 +98,12 @@ namespace CS_DZ_OOP_8
                 Console.WriteLine("У бойца - " + firstFighter.Name + " осталось " + firstFighter.Health);
                 Console.WriteLine("У бойца - " + secondFighter.Name + " осталось " + secondFighter.Health);
 
-                if(firstFighter.Health < 0)
+                if (firstFighter.Health < 0)
                 {
                     Console.WriteLine(firstFighter.Name + " умер");
                     Console.WriteLine(secondFighter.Name + " победил");
                 }
-                else if(secondFighter.Health < 0)
+                else if (secondFighter.Health < 0)
                 {
                     Console.WriteLine(secondFighter.Name + " умер");
                     Console.WriteLine(firstFighter.Name + " победил");
@@ -86,12 +119,12 @@ namespace CS_DZ_OOP_8
         public string Name { get; private set; }
 
         public int Health { get; private set; }
+        
+        public int Damage { get; private set; }
 
         protected int Armor;
 
         protected string SpecialHit;
-
-        public int Damage { get; private set; }
 
         public Fighter(int index, string name, int health, int armor, string specialHit, int damage)
         {
@@ -116,28 +149,27 @@ namespace CS_DZ_OOP_8
 
     class BigHuman : Fighter
     {
-        public BigHuman(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage + 20) { }
+        public BigHuman(int index, string name, int health, int armor, string specialHit, int damage, int specialDamage) : base(index, name, health, armor, specialHit, damage + specialDamage) { }
 
     }
 
     class Monster : Fighter
     {
-        public Monster(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage * 6) { }
-
+        public Monster(int index, string name, int health, int armor, string specialHit, int damage, int specialDamage) : base(index, name, health, armor, specialHit, damage * specialDamage) { }
     }
 
     class SmallHuman : Fighter
     {
-        public SmallHuman(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage * 3) { }
+        public SmallHuman(int index, string name, int health, int armor, string specialHit, int damage, int specialDamage) : base(index, name, health, armor, specialHit, damage * specialDamage) { }
     }
 
     class General : Fighter
     {
-        public General(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage * 2) { }
+        public General(int index, string name, int health, int armor, string specialHit, int damage, int specialDamage) : base(index, name, health, armor, specialHit, damage * specialDamage) { }
     }
 
     class Elf : Fighter
     {
-        public Elf(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage + 30) { }
+        public Elf(int index, string name, int health, int armor, string specialHit, int damage, int specialDamage) : base(index, name, health, armor, specialHit, damage + specialDamage) { }
     }
 }
