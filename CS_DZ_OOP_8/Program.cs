@@ -12,11 +12,11 @@ namespace CS_DZ_OOP_8
         {
             Arena arena = new Arena();
             List<Fighter> fighters = new List<Fighter>();
-            BigHuman bigBoy = new BigHuman(1, "Амбал", 600, 0, "Берсерк + 20 к урону", 5, 20);
-            Monster monster = new Monster(2, "Вурдалак", 200, 10, "Быстрая атака", 10, 6);
-            SmallHuman smallBoy = new SmallHuman(3, "Жилистый", 300, 0, "Тройной удар", 10, 3);
-            General general = new General(4 ,"Господин", 400, 10, "Двойной удар", 10, 2);
-            Elf elf = new Elf(5, "Селена", 300, 10, "Ночной волк с уроном 30", 10, 30);
+            BigHuman bigBoy = new BigHuman(1, "Амбал", 600, 0, "Берсерк + 5 к урону", 10);
+            Monster monster = new Monster(2, "Вурдалак", 300, 9, "каждую атаку восстанавливает 10 здоровья", 10);
+            SmallHuman smallBoy = new SmallHuman(3, "Жилистый", 300, 0, "Тройной удар", 10);
+            General general = new General(4 ,"Господин", 400, 8, "Двойной удар", 10);
+            Elf elf = new Elf(5, "Умберто", 300, 5, "Ночной волк с уроном 30", 10);
 
             fighters.Add(bigBoy); 
             fighters.Add(monster); 
@@ -28,7 +28,6 @@ namespace CS_DZ_OOP_8
             {
                 fighter.Showinfo();
             }
-
             arena.Fight(fighters);
         }
     }
@@ -37,8 +36,37 @@ namespace CS_DZ_OOP_8
     {
         public void Fight(List <Fighter> fighters)
         {
-            Fighter firstFighter = null;
-            Fighter secondFighter = null;
+            ChooseFighters(fighters, out Fighter firstFighter, out Fighter secondFighter);
+
+            while (firstFighter.Health >= 0 && secondFighter.Health >= 0)
+            {
+                secondFighter.TakeDamage(firstFighter.DoDamage(firstFighter.Damage), firstFighter.Regeneration(firstFighter.Health));
+                firstFighter.TakeDamage(secondFighter.DoDamage(secondFighter.Damage), secondFighter.Regeneration(secondFighter.Health));
+                Console.WriteLine("У бойца - " + firstFighter.Name + " осталось " + firstFighter.Health);
+                Console.WriteLine("У бойца - " + secondFighter.Name + " осталось " + secondFighter.Health);
+            }
+
+            if (firstFighter.Health < 0 && secondFighter.Health > 0)
+            {
+                Console.WriteLine(firstFighter.Name + " умер");
+                Console.WriteLine(secondFighter.Name + " победил");
+            }
+            else if (secondFighter.Health < 0 && firstFighter.Health > 0)
+            {
+                Console.WriteLine(secondFighter.Name + " умер");
+                Console.WriteLine(firstFighter.Name + " победил");
+            }
+            else if(firstFighter.Health < 0 && secondFighter.Health < 0)
+            {
+                Console.WriteLine("Оба умерли!");
+            }
+        }
+
+        private void ChooseFighters(List<Fighter> fighters, out Fighter firstFighter, out Fighter secondFighter)
+        {
+            firstFighter = null;
+            secondFighter = null;
+
             bool correctFirstInput = false;
             bool correctSecondInput = false;
             int index = 0;
@@ -47,7 +75,7 @@ namespace CS_DZ_OOP_8
 
             while (correctFirstInput == false)
             {
-                if(int.TryParse(Console.ReadLine(), out int firstIndex) && firstIndex > 0 && firstIndex <= fighters.Count)
+                if (int.TryParse(Console.ReadLine(), out int firstIndex) && firstIndex > 0 && firstIndex <= fighters.Count)
                 {
                     correctFirstInput = true;
                     index = firstIndex;
@@ -90,41 +118,22 @@ namespace CS_DZ_OOP_8
                     Console.WriteLine("Ошибка повторите попытку!");
                 }
             }
-
-            while (firstFighter.Health >= 0 && secondFighter.Health >= 0)
-            {
-                firstFighter.TakeDamage(secondFighter.Damage);
-                secondFighter.TakeDamage(firstFighter.Damage);
-                Console.WriteLine("У бойца - " + firstFighter.Name + " осталось " + firstFighter.Health);
-                Console.WriteLine("У бойца - " + secondFighter.Name + " осталось " + secondFighter.Health);
-
-                if (firstFighter.Health < 0)
-                {
-                    Console.WriteLine(firstFighter.Name + " умер");
-                    Console.WriteLine(secondFighter.Name + " победил");
-                }
-                else if (secondFighter.Health < 0)
-                {
-                    Console.WriteLine(secondFighter.Name + " умер");
-                    Console.WriteLine(firstFighter.Name + " победил");
-                }
-            }
         }
     }
 
     class Fighter
     {
+        protected int Armor;
+
+        protected string SpecialHit;
+
+        public int Damage { get; private set; }
+
         public int Index { get; private set; }
 
         public string Name { get; private set; }
 
         public int Health { get; private set; }
-        
-        public int Damage { get; private set; }
-
-        protected int Armor;
-
-        protected string SpecialHit;
 
         public Fighter(int index, string name, int health, int armor, string specialHit, int damage)
         {
@@ -136,9 +145,26 @@ namespace CS_DZ_OOP_8
             Damage = damage;
         }
 
-        public void TakeDamage(int damage)
+        public virtual int DoDamage(int damage)
         {
-            Health -= damage - Armor;
+            return Damage;
+        }
+
+        public virtual int Regeneration(int health)
+        {
+            return Health;
+        }
+
+        public void TakeDamage(int damage, int health)
+        {
+            if(damage > Armor)
+            {
+                Health -= damage - Armor;
+            }
+            else
+            {
+                Console.Write("Броня не пробита!");
+            }
         }
 
         public void Showinfo()
@@ -149,27 +175,56 @@ namespace CS_DZ_OOP_8
 
     class BigHuman : Fighter
     {
-        public BigHuman(int index, string name, int health, int armor, string specialHit, int damage, int specialDamage) : base(index, name, health, armor, specialHit, damage + specialDamage) { }
+        public BigHuman(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage) { }
 
+        public override int DoDamage(int damage)
+        {
+            damage += 5;
+            return damage;
+        }
     }
 
     class Monster : Fighter
     {
-        public Monster(int index, string name, int health, int armor, string specialHit, int damage, int specialDamage) : base(index, name, health, armor, specialHit, damage * specialDamage) { }
+        public Monster(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage) { }
+
+        public override int Regeneration(int health)
+        {
+            health += 10;
+            return health;
+        }
     }
 
     class SmallHuman : Fighter
     {
-        public SmallHuman(int index, string name, int health, int armor, string specialHit, int damage, int specialDamage) : base(index, name, health, armor, specialHit, damage * specialDamage) { }
+        public SmallHuman(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage) { }
+
+        public override int DoDamage(int damage)
+        {
+            damage = Damage * 3;
+            return damage;
+        }
     }
 
     class General : Fighter
     {
-        public General(int index, string name, int health, int armor, string specialHit, int damage, int specialDamage) : base(index, name, health, armor, specialHit, damage * specialDamage) { }
+        public General(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage) { }
+
+        public override int DoDamage(int damage)
+        {
+            damage = Damage * 2;
+            return damage;
+        }
     }
 
     class Elf : Fighter
     {
-        public Elf(int index, string name, int health, int armor, string specialHit, int damage, int specialDamage) : base(index, name, health, armor, specialHit, damage + specialDamage) { }
+        public Elf(int index, string name, int health, int armor, string specialHit, int damage) : base(index, name, health, armor, specialHit, damage) { }
+
+        public override int DoDamage(int damage)
+        {
+            damage = Damage + 30;
+            return damage;
+        }
     }
 }
